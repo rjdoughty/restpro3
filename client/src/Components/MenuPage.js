@@ -5,9 +5,7 @@ const HomePage = (props) => (
     <div>
         <Header />
         <MenuSection menuList={props.menuList} addOrder={props.addOrder}/>
-        <OrderSection newOrder={props.newOrder} total={props.total} placeOrder={props.placeOrder} />
-        
-         
+        <OrderSection newOrder={props.newOrder} total={props.total} placeOrder={props.placeOrder} />      
     </div>
 )
 
