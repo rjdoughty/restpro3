@@ -33,20 +33,34 @@ class App extends Component {
       //     }
     ],
     newOrder: [],
-    total: 0
+    total: 0,
+    myOrders: []
   }
 
-  componentDidMount(){
+
+  getMenu = () => {
     axios.get('/api/Menu')
     .then((result) => {
       console.log(result);
       this.setState({menuList: result.data})
-    
-    })  
+    }) 
   }
+getOrders = () => {
+  axios.get('/api/Orders')
+    .then((result) => {
+      console.log(result);
+      this.setState({myOrders: result.data})
+    })  
+}
+  
+  componentDidMount(){
+     this.getMenu();
+     this.getOrders();
+  }
+ 
 
 addNewOrder = (id) => {
-  const additem = this.state.menuList.find(item => item.id === id)
+  const additem = this.state.menuList.find(item => item._id === id)
   const newList = [...this.state.newOrder];
   newList.push(additem);
   
@@ -55,14 +69,22 @@ addNewOrder = (id) => {
   this.setState({ newOrder: newList, total: total })
 }
 
-placeOrder = (event) => {
-  event.preventDefault();
+placeOrder = () => {
   const orderarray = this.state.newOrder.map(e => e.menuItem)
   console.log(this.state.total);
   axios.post('/api/Orders', {menuItems: orderarray, price: this.state.total})
     .then((result) => { 
       console.log(result.data);
     })
+}
+
+deleteOrder = (id) => {
+  console.log(id);
+  axios.delete(`/api/Orders/${id}`)
+  .then((result) => {
+    console.log(result);
+    this.getOrders();
+  })
 }
 
 
@@ -75,6 +97,8 @@ placeOrder = (event) => {
           newOrder={this.state.newOrder}    
           total={this.state.total}       
           placeOrder={this.placeOrder}
+          myOrders={this.state.myOrders}
+          deleteOrder={this.deleteOrder}
       />
       </div>
     );
