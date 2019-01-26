@@ -22,6 +22,7 @@ const MenuSchema = new Schema({
         type: Boolean,
         default: false
     }
+  
 
 });
 
