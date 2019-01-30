@@ -1,10 +1,12 @@
 import React from 'react';
 
+
 const MenuSection = (props) => (
-    <div>Menu   
+    <div className="menuSection">  
         {props.menuList.map(item => 
             <MenuCard 
                 name={item.menuItem} 
+                image={item.image}
                 price={item.price} 
                 ingredients={item.ingredients} 
                 id={item._id} 
@@ -15,9 +17,13 @@ const MenuSection = (props) => (
 )
 
 const MenuCard = (props) => (
-    <div>
-        <h3>{props.name} <span>{props.price}</span><button onClick={()=> props.compileOrder(props.id)}>Add Item</button></h3>
-        <p>{props.ingredients.join(", ")}</p>
+    <div className="menuItem">
+        
+        <img className="menuphoto" src={props.image} alt={props.name}></img>
+        <h3>{props.name}</h3>
+        <p className="ingredients">{props.ingredients.join(", ")}</p>
+        <h4>{props.price}<button onClick={()=> props.compileOrder(props.id)}>Add Item</button></h4>
+       
     </div>
     
 )

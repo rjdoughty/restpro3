@@ -1,9 +1,18 @@
 import React from 'react';
 
+
 const OrderSection = (props) => (
-    <div> Order Cart
-        {props.newOrder.map((item, i) => <OrderCart name={item.menuItem} price={item.price} total={props.total} key={i} />)}
+    <div className="ordercontainer"> 
+            <h2>My Order</h2>
+        {props.newOrder.map((item, i) => 
+            <OrderCart name={item.menuItem} 
+                        price={item.price} 
+                        total={props.total} 
+                        key={i} 
+                        />)}
+                        
         <SubmitOrder  total={props.total} placeOrder={props.placeOrder}/>
+        
     </div>
 )
 
@@ -16,8 +25,9 @@ const OrderCart = (props) => (
 
 const SubmitOrder = (props) => (
     <div>
-        <h3>{props.total}</h3>
+        <h3>Total: {props.total}</h3>
         <button onClick={props.placeOrder}>Submit Order</button>
+        <button>Clear Cart</button>
     </div>
 )
 

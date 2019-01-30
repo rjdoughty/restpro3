@@ -46,16 +46,20 @@ const socket = openSocket('http://localhost:3001/');
         username: '',
         password: '',
         currentUser: ''
+        
       }
       
-      // constructor(props) {
-      //   super(props);
+    //  toggleOrderSection = () => {
+    //    this.setState({ isOrderHidden: !this.state.isOrderHidden })
+    //  }
 
-      //   const callback = function(a, b) {
-      //     console.log(b);
-      //   }
-      //   sendOrders(callback);
-      // }
+    //  renderOrderSection = () => {
+    //    if(!this.state.isOrderHidden) {
+    //      return <OrderSection newOrder={this.state.newOrder} total={this.state.total} placeOrder={this.placeOrder} />      
+    //    } else {
+    //      return <MenuSection menuList={this.state.menuList} compileOrder={this.compileOrder}/>
+    //    }
+    //  }
 
 
       submitLogin = (event) => {
@@ -107,12 +111,16 @@ changePassword = (event) => {
       const newList = [...this.state.newOrder];
       newList.push(additem);
       
-      const total = (this.state.total + additem.price);
+      const newprice = (this.state.total + additem.price);
+      const total = parseFloat(newprice.toFixed(2));
       console.log(total);
       this.setState({ newOrder: newList, total: total })
     }
     
     placeOrder = () => {
+      if (this.state.total === 0) {
+          console.log("empty")
+      } else {
       const orderarray = this.state.newOrder.map(e => e.menuItem)
       console.log(this.state.total);
       socket.emit('new-order', {menuItems: orderarray, price: this.state.total})
@@ -123,9 +131,9 @@ changePassword = (event) => {
       
           this.getOrders();
         })
-
+        this.setState({ newOrder: [], total: 0 })
     }
-    
+  }
     deleteOrder = (id) => {
       console.log(id);
       axios.delete(`/api/Orders/${id}`)
@@ -155,6 +163,9 @@ changePassword = (event) => {
           placeOrder={this.placeOrder}
           myOrders={this.state.myOrders}
           deleteOrder={this.deleteOrder}
+          
+          
+          
           />
       }
       else if(this.state.isLoggedIn && this.state.currentUser === 'admin') {
@@ -168,7 +179,7 @@ changePassword = (event) => {
       render() {
         return (
           <div className="App">
-            <Header />
+            <Header/>
            {/* <Login 
               handleLogin={this.submitLogin}
               changeName={this.changeName}
@@ -177,6 +188,7 @@ changePassword = (event) => {
               password={this.state.password}
             /> */}
             {this.renderHomepage()}
+            {/* {this.renderOrderSection()} */}
              {/* { 
             this.state.isLoggedIn === true && this.state.currentUser === 'admin'
             ?  <HomePage

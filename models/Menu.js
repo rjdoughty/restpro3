@@ -21,6 +21,9 @@ const MenuSchema = new Schema({
     selected: {
         type: Boolean,
         default: false
+    }, 
+    image: {
+        type: String
     }
   
 
