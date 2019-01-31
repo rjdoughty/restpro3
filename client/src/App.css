@@ -35,3 +35,8 @@
 .ordercontainer {
   overflow: scroll;
 }
+
+.adminview {
+  text-align: center;
+  font-size: 20px;
+}

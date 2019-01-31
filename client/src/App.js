@@ -45,7 +45,8 @@ const socket = openSocket('http://localhost:3001/');
         isLoggedIn: false,
         username: '',
         password: '',
-        currentUser: ''
+        currentUser: '',
+        time: ''
         
       }
       
@@ -121,10 +122,18 @@ changePassword = (event) => {
       if (this.state.total === 0) {
           console.log("empty")
       } else {
+        var currentDate = new Date();
+        var hour = currentDate.getHours();
+        var min = currentDate.getMinutes();
+        var date = currentDate.getDate();
+        var month = currentDate.getMonth(); 
+        var year = currentDate.getFullYear();
+        var monthDateYear  = hour + ":" + min + " " + (month+1) + "/" + date + "/" + year;
+        console.log(monthDateYear);
       const orderarray = this.state.newOrder.map(e => e.menuItem)
       console.log(this.state.total);
-      socket.emit('new-order', {menuItems: orderarray, price: this.state.total})
-      axios.post('/api/Orders', {menuItems: orderarray, price: this.state.total})
+      socket.emit('new-order', {menuItems: orderarray, price: this.state.total, time: monthDateYear })
+      axios.post('/api/Orders', {menuItems: orderarray, price: this.state.total, time: monthDateYear })
         .then((result) => { 
           console.log(result.data);
           // sendOrders({data: this.state.myOrders})
@@ -172,6 +181,7 @@ changePassword = (event) => {
           return <AdminView 
           myOrders={this.state.myOrders}
           deleteOrder={this.deleteOrder}
+          time={this.state.time}
           />
       }
     }

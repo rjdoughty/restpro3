@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 const OrderSchema = new Schema({
     menuItems: Array,
-    price: Number
-
+    price: Number,
+    time: String
 });
 
 var Order = mongoose.model('Order', OrderSchema);
