@@ -100,10 +100,23 @@ changePassword = (event) => {
            console.log('incoming data\n\n', data);
            this.setState({myOrders: [...this.state.myOrders, data]})
          });
-        //  setInterval(() => {
-        //    sendOrders({data: this.state.myOrders})
-        //  }, 1000);
-       
+
+         socket.on('complete-order', data => {
+          console.log('incoming data\n\n', data.data);
+          const orderUpdate = this.state.myOrders.find(item => item._id === data.data._id)
+
+          console.log(data.data.isCompleted);
+          console.log(orderUpdate.isCompleted);
+          orderUpdate.isCompleted = data.data.isCompleted;
+          console.log(orderUpdate.isCompleted);
+          const index = data.data._id;
+          console.log(index);
+          var newList = [...this.state.myOrders];
+          newList = (newList.filter(item => item._id !== index).map(item => item))
+          newList.push(orderUpdate)
+          console.log(newList)
+          this.setState({ myOrders: newList })
+        });
       }
      
     
@@ -130,10 +143,10 @@ changePassword = (event) => {
         var year = currentDate.getFullYear();
         var monthDateYear  = hour + ":" + min + " " + (month+1) + "/" + date + "/" + year;
         console.log(monthDateYear);
-      const orderarray = this.state.newOrder.map(e => e.menuItem)
+        const orderarray = this.state.newOrder.map(e => e.menuItem)
       console.log(this.state.total);
-      socket.emit('new-order', {menuItems: orderarray, price: this.state.total, time: monthDateYear })
-      axios.post('/api/Orders', {menuItems: orderarray, price: this.state.total, time: monthDateYear })
+      socket.emit('new-order', {menuItems: orderarray, price: this.state.total, time: monthDateYear, isCompleted: false })
+      axios.post('/api/Orders', {menuItems: orderarray, price: this.state.total, time: monthDateYear, isCompleted: false})
         .then((result) => { 
           console.log(result.data);
           // sendOrders({data: this.state.myOrders})
@@ -143,6 +156,34 @@ changePassword = (event) => {
         this.setState({ newOrder: [], total: 0 })
     }
   }
+
+  completeOrder = (id, isCompleted) => {
+    
+    if (isCompleted === false) {
+      axios.put(`/api/Orders/${id}`, { _id: id, isCompleted: true });
+      const updateOrder = {
+        _id: id,
+        isCompleted: true,
+      }
+    console.log(updateOrder);
+    socket.emit('complete-order', {data: updateOrder});
+      this.getOrders();
+    } else {
+      axios.put(`/api/Orders/${id}`, { _id: id, isCompleted: false });
+      const updateOrder = {
+        _id: id,
+        isCompleted: false,
+      }   
+    console.log(updateOrder);
+    socket.emit('complete-order', {data: updateOrder});
+    }
+      this.getOrders();
+    }
+
+    
+
+
+
     deleteOrder = (id) => {
       console.log(id);
       axios.delete(`/api/Orders/${id}`)
@@ -162,7 +203,6 @@ changePassword = (event) => {
               password={this.state.password}
             />
       }
-      
       else if(this.state.isLoggedIn && this.state.currentUser !== 'admin') {
           return <HomePage
           menuList={this.state.menuList} 
@@ -172,9 +212,6 @@ changePassword = (event) => {
           placeOrder={this.placeOrder}
           myOrders={this.state.myOrders}
           deleteOrder={this.deleteOrder}
-          
-          
-          
           />
       }
       else if(this.state.isLoggedIn && this.state.currentUser === 'admin') {
@@ -182,6 +219,7 @@ changePassword = (event) => {
           myOrders={this.state.myOrders}
           deleteOrder={this.deleteOrder}
           time={this.state.time}
+          completeOrder={this.completeOrder}
           />
       }
     }
@@ -190,33 +228,7 @@ changePassword = (event) => {
         return (
           <div className="App">
             <Header/>
-           {/* <Login 
-              handleLogin={this.submitLogin}
-              changeName={this.changeName}
-              changePassword={this.changePassword}  
-              username={this.state.username}
-              password={this.state.password}
-            /> */}
             {this.renderHomepage()}
-            {/* {this.renderOrderSection()} */}
-             {/* { 
-            this.state.isLoggedIn === true && this.state.currentUser === 'admin'
-            ?  <HomePage
-              menuList={this.state.menuList} 
-              compileOrder={this.compileOrder}
-              newOrder={this.state.newOrder}    
-              total={this.state.total}       
-              placeOrder={this.placeOrder}
-              myOrders={this.state.myOrders}
-              deleteOrder={this.deleteOrder}
-            />
-         : <AdminView />
-             } */}
-           
-            
-            
-            
-
           </div>
         );
       }

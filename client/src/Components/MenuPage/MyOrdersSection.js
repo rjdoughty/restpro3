@@ -8,6 +8,7 @@ const MyOrdersSection = (props) => (
             <PastOrders 
                 name={item.menuItems} 
                 price={item.price} 
+                isCompleted={item.isCompleted}
                 ingredients={item.ingredients} 
                 id={item._id} 
                 addOrder={props.addOrder} 
@@ -18,7 +19,14 @@ const MyOrdersSection = (props) => (
 )
 const PastOrders = (props) => (
     <div>
-        <h5>{props.name.join(", ")}<span>{props.price}</span><span onClick={()=> props.deleteOrder(props.id)}>x</span></h5>
+         {props.isCompleted === false
+            ? <span>Preparing</span>
+            : <span>Ready</span>
+        }
+        {props.name.join(", ")}
+        <span>{props.price}</span>
+        <span onClick={()=> props.deleteOrder(props.id)}>x</span>
+        
     </div>
 )
 

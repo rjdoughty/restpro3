@@ -7,6 +7,10 @@ module.exports = function(io){
              io.emit('new-order', data);
         })
 
+        socket.on('complete-order', function(data){
+            console.log(data);
+            io.emit('complete-order', data);
+        })
 
     });
 }
