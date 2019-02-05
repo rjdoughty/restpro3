@@ -22,7 +22,7 @@ const MenuCard = (props) => (
         <img className="menuphoto" src={props.image} alt={props.name}></img>
         <h3>{props.name}</h3>
         <p className="ingredients">{props.ingredients.join(", ")}</p>
-        <h4>{props.price}<button onClick={()=> props.compileOrder(props.id)}>Add Item</button></h4>
+        <h4>{props.price}{" "}<button onClick={()=> props.compileOrder(props.id)}>Add Item</button></h4>
        
     </div>
     

@@ -1,19 +1,54 @@
+
 .main-container {
   display: grid;
   grid-template-rows: 40% 1fr;
   grid-template-columns: 1fr 20%;
+  background-color: #B0B7BC;
 }
 
 .menuSection {
-
   grid-row: span 2;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
 }
 
 .header {
-  height: 200px;
-  background-color: rosybrown;
+  height: 100px;
+  background-color: #C60C30;
+  font-size: 50px;
+  font-family: 'Permanent Marker', cursive;
+  color: white;
+  padding: 50px 0px;
+  text-align: center;
+
+}
+.name {
+  margin: auto;
+}
+/* font-family: 'Permanent Marker', cursive;
+font-family: 'Courgette', cursive; */
+
+.login {
+  width: 350px;
+  height: 300px;
+  margin: auto;
+  text-align: center;
+  border: 3px solid darkgray;
+  position: fixed;
+  right: 40%;
+  bottom: 20%;
+  background-color: white;
+
+}
+
+form {
+  padding: 100px 0;
+}
+
+.logincontainer {
+  background-color: #B0B7BC;
+  height: 550px;
 }
 
 .menuphoto {
@@ -21,22 +56,83 @@
   width: 150px;
 }
 
+
 .menuItem {
   height: 300px;
   width: auto;
   margin: 10px;
   text-align: center;
   padding-top: 10px;
-  border: 1px solid black;
+  border: 3px solid darkgray;
+  background-color: white;
 }
 .ingredients {
   font-size: 20px;
 }
 .ordercontainer {
+  background-color: white;
+  margin: 15px;
   overflow: scroll;
+  height: 240px;
+  
+  text-align: center;
 }
 
 .adminview {
   text-align: center;
   font-size: 20px;
+  background-color: #B0B7BC;
+  min-height: 550px;
 }
+.incomingOrders {
+  width: 80%;
+  min-height: 20px;
+  text-align: center;
+  border: 3px solid darkgray;
+  margin: auto;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 10% 30% 1fr 10%;
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 25px;
+  background-color: white;
+}
+
+.far {
+  font-size: 50px;
+  color: grey;
+}
+.completedOrders {
+  text-align: center;
+  margin: 10px;
+  overflow: scroll;
+  height: 360px;
+  padding: 5px;
+
+
+}
+.singleOrder {
+  border: 3px solid darkgray;
+  margin: 5px;
+  padding: 5px;
+  background-color: white;
+}
+
+.preparing {
+  color: #C60C30;
+  font-weight: 900;
+}
+
+.ready {
+  color: green;
+  font-weight: 900;
+}
+button {
+  background-color: #002244;
+  color: white;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+

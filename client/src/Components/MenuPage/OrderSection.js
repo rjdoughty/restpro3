@@ -3,7 +3,7 @@ import React from 'react';
 
 const OrderSection = (props) => (
     <div className="ordercontainer"> 
-            <h2>My Order</h2>
+            <h2>Order Cart</h2>
         {props.newOrder.map((item, i) => 
             <OrderCart name={item.menuItem} 
                         price={item.price} 
@@ -19,7 +19,7 @@ const OrderSection = (props) => (
 
 const OrderCart = (props) => (
     <div>
-        <h5>{props.name}<span>{props.price}</span></h5>
+    <h5>{props.name}{" "}{props.price}</h5>
     </div>
 )
 

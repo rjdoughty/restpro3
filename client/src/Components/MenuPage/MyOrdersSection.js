@@ -1,9 +1,10 @@
 import React from 'react';
 
 const MyOrdersSection = (props) => (
-
-    <div>Past Orders
+ 
+    <div className="completedOrders">My Orders
         {console.log(props.myOrders)}
+        <div>
     {props.myOrders.map(item => 
             <PastOrders 
                 name={item.menuItems} 
@@ -11,22 +12,24 @@ const MyOrdersSection = (props) => (
                 isCompleted={item.isCompleted}
                 ingredients={item.ingredients} 
                 id={item._id} 
+                time={item.time}
                 addOrder={props.addOrder} 
                 deleteOrder={props.deleteOrder}
                 key={item._id} 
                 />)} 
+        </div>
     </div>
 )
 const PastOrders = (props) => (
-    <div>
-         {props.isCompleted === false
-            ? <span>Preparing</span>
-            : <span>Ready</span>
-        }
-        {props.name.join(", ")}
-        <span>{props.price}</span>
-        <span onClick={()=> props.deleteOrder(props.id)}>x</span>
-        
+    <div className="singleOrder">
+        <span>{props.time}</span><br/>
+        <span>{props.name.join(", ")}</span><br/>
+        <span>{props.price}</span><br/>
+        <span>{props.isCompleted === false
+            ? <span className="preparing">Preparing</span>
+            : <span className="ready">Ready</span>
+        }</span><br/>
+        <button onClick={()=> props.deleteOrder(props.id)}>DELETE</button> 
     </div>
 )
 

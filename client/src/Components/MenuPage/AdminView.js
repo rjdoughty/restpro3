@@ -20,16 +20,15 @@ const AdminView = (props) => (
 )
 
 const PastOrders = (props) => (
-    <div>
+    <div className= "incomingOrders">
         {console.log(props.isCompleted)}
-        {props.isCompleted === false
+        <span>{props.isCompleted === false
             ? <i className="far fa-square" onClick={() => props.completeOrder(props.id, props.isCompleted)}></i>
             : <i className="far fa-check-square" onClick={() => props.completeOrder(props.id, props.isCompleted)}></i>
-        }
+        }</span>
         <span>{props.time}</span>
-        {" "}
-        {props.name.join(", ")}
-        <span onClick={()=> props.deleteOrder(props.id)}>x</span>
+        <span>{props.name.join(", ")}</span>
+        <span onClick={()=> props.deleteOrder(props.id)}><i class="far fa-times-circle"></i></span>
     </div>
 )
 

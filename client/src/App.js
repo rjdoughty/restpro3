@@ -6,7 +6,7 @@ import HomePage from './Components/MenuPage/MenuPage';
 import Header from './Components/MenuPage/Header';
 import Login from './Components/MenuPage/Login';
 import AdminView from './Components/MenuPage/AdminView';
-import { sendOrders } from './api'
+
 
 import openSocket from 'socket.io-client';
 const socket = openSocket('http://localhost:3001/');
@@ -50,19 +50,6 @@ const socket = openSocket('http://localhost:3001/');
         
       }
       
-    //  toggleOrderSection = () => {
-    //    this.setState({ isOrderHidden: !this.state.isOrderHidden })
-    //  }
-
-    //  renderOrderSection = () => {
-    //    if(!this.state.isOrderHidden) {
-    //      return <OrderSection newOrder={this.state.newOrder} total={this.state.total} placeOrder={this.placeOrder} />      
-    //    } else {
-    //      return <MenuSection menuList={this.state.menuList} compileOrder={this.compileOrder}/>
-    //    }
-    //  }
-
-
       submitLogin = (event) => {
         event.preventDefault();
         this.setState({ isLoggedIn: true, currentUser: this.state.username})
@@ -96,15 +83,15 @@ changePassword = (event) => {
       componentDidMount(){
          this.getMenu();
          this.getOrders();
-         socket.on('new-order', data => {
-           console.log('incoming data\n\n', data);
-           this.setState({myOrders: [...this.state.myOrders, data]})
+         socket.on('new-order',  data => {
+           console.log('incoming data\n\n', data.sendOrder);
+           this.setState({ myOrders: [...this.state.myOrders, data.sendOrder] })
          });
 
          socket.on('complete-order', data => {
           console.log('incoming data\n\n', data.data);
           const orderUpdate = this.state.myOrders.find(item => item._id === data.data._id)
-
+          console.log(orderUpdate);
           console.log(data.data.isCompleted);
           console.log(orderUpdate.isCompleted);
           orderUpdate.isCompleted = data.data.isCompleted;
@@ -141,18 +128,20 @@ changePassword = (event) => {
         var date = currentDate.getDate();
         var month = currentDate.getMonth(); 
         var year = currentDate.getFullYear();
-        var monthDateYear  = hour + ":" + min + " " + (month+1) + "/" + date + "/" + year;
+        var monthDateYear  = hour + ":" + ('0' + min).slice(-2) + " " + (month+1) + "/" + date;
         console.log(monthDateYear);
         const orderarray = this.state.newOrder.map(e => e.menuItem)
       console.log(this.state.total);
-      socket.emit('new-order', {menuItems: orderarray, price: this.state.total, time: monthDateYear, isCompleted: false })
+      
       axios.post('/api/Orders', {menuItems: orderarray, price: this.state.total, time: monthDateYear, isCompleted: false})
         .then((result) => { 
           console.log(result.data);
-          // sendOrders({data: this.state.myOrders})
-      
-          this.getOrders();
+          const sendOrder = result.data
+          
+          socket.emit('new-order', { sendOrder })
+          
         })
+        
         this.setState({ newOrder: [], total: 0 })
     }
   }
