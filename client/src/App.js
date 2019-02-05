@@ -9,7 +9,7 @@ import AdminView from './Components/MenuPage/AdminView';
 
 
 import openSocket from 'socket.io-client';
-const socket = openSocket('http://localhost:3001/');
+const socket = openSocket('https://restproj3.herokuapp.com/');
 
   class App extends React.Component {
     state = {
