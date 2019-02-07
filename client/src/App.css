@@ -2,7 +2,7 @@
 .main-container {
   display: grid;
   grid-template-rows: 40% 1fr;
-  grid-template-columns: 1fr 20%;
+  grid-template-columns: 1fr 25%;
   background-color: #B0B7BC;
 }
 
@@ -14,9 +14,9 @@
 }
 
 .header {
-  height: 100px;
+  height: 50px;
   background-color: #C60C30;
-  font-size: 50px;
+  font-size: 60px;
   font-family: 'Permanent Marker', cursive;
   color: white;
   padding: 50px 0px;
@@ -25,9 +25,10 @@
 }
 .name {
   margin: auto;
+  width: 60%;
+  font-stretch: expanded;
 }
-/* font-family: 'Permanent Marker', cursive;
-font-family: 'Courgette', cursive; */
+
 
 .login {
   width: 350px;
@@ -92,7 +93,7 @@ form {
   margin: auto;
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-columns: 10% 30% 1fr 10%;
+  grid-template-columns: 10% 20% 20% 1fr 10%;
   margin-top: 10px;
   padding: 10px;
   font-size: 25px;
@@ -110,8 +111,13 @@ form {
   height: 360px;
   padding: 5px;
 
-
 }
+.heading {
+  color: white;
+  font-weight: 800;
+  font-size: 20px;
+}
+
 .singleOrder {
   border: 3px solid darkgray;
   margin: 5px;

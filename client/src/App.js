@@ -11,216 +11,169 @@ import AdminView from './Components/MenuPage/AdminView';
 import openSocket from 'socket.io-client';
 const socket = openSocket('https://restproj3.herokuapp.com/');
 
-  class App extends React.Component {
-    state = {
-        menuList: [
-          // {
-          //   id: 1,
-          // menuItem: 'cheeseburger',
-          // price: 5.99,
-          // ingredients: ['american cheese', 'lettuce', 'tomatoes','pickles', 'onions'],
-          // category: 'burger',
-          // selected:  false
-          // },
-          // {
-          //   id: 2,
-          //   menuItem: 'bacon cheeseburger',
-          //   price: 6.99,
-          //   ingredients: ['bacon', 'cheese', 'lettuce', 'tomatoes','pickles', 'onions'],
-          //   category: 'burger',
-          //   selected:  false
-          //   },
-          //   {
-          //     id: 3,
-          //     menuItem: 'turkey burger',
-          //     price: 5.99,
-          //     ingredients: ['swiss cheese', 'lettuce', 'tomatoes','pickles', 'onions'],
-          //     category: 'burger',
-          //     selected:  false
-          //     }
-        ],
-        newOrder: [],
-        total: 0,
-        myOrders: [],
-        isLoggedIn: false,
-        username: '',
-        password: '',
-        currentUser: '',
-        time: ''
-        
-      }
-      
-      submitLogin = (event) => {
-        event.preventDefault();
-        this.setState({ isLoggedIn: true, currentUser: this.state.username})
-    }
-    changeName = (event) => {
+class App extends React.Component {
+  state = {
+    menuList: [],
+    newOrder: [],
+    total: 0,
+    myOrders: [],
+    isLoggedIn: false,
+    username: '',
+    password: '',
+    currentUser: '',
+    time: ''
+  }
+
+  submitLogin = (event) => {
+    if (this.state.username === '') {
+      alert('name required');
+    } else {
       event.preventDefault();
-      this.setState({username: event.target.value})
-}
-
-changePassword = (event) => {
-  event.preventDefault();
-  this.setState({password: event.target.value})
-}
-    
-      getMenu = () => {
-        axios.get('/api/Menu')
-        .then((result) => {
-          console.log(result);
-          this.setState({menuList: result.data})
-        }) 
-      }
-    getOrders = () => {
-      axios.get('/api/Orders')
-        .then((result) => {
-          console.log(result);
-          this.setState({myOrders: result.data})
-          
-        })  
-    }
-      
-      componentDidMount(){
-         this.getMenu();
-         this.getOrders();
-         socket.on('new-order',  data => {
-           console.log('incoming data\n\n', data.sendOrder);
-           this.setState({ myOrders: [...this.state.myOrders, data.sendOrder] })
-         });
-
-         socket.on('complete-order', data => {
-          console.log('incoming data\n\n', data.data);
-          const orderUpdate = this.state.myOrders.find(item => item._id === data.data._id)
-          console.log(orderUpdate);
-          console.log(data.data.isCompleted);
-          console.log(orderUpdate.isCompleted);
-          orderUpdate.isCompleted = data.data.isCompleted;
-          console.log(orderUpdate.isCompleted);
-          const index = data.data._id;
-          console.log(index);
-          var newList = [...this.state.myOrders];
-          newList = (newList.filter(item => item._id !== index).map(item => item))
-          newList.push(orderUpdate)
-          console.log(newList)
-          this.setState({ myOrders: newList })
-        });
-      }
-     
-    
-    compileOrder = (id) => {
-      const additem = this.state.menuList.find(item => item._id === id)
-      const newList = [...this.state.newOrder];
-      newList.push(additem);
-      
-      const newprice = (this.state.total + additem.price);
-      const total = parseFloat(newprice.toFixed(2));
-      console.log(total);
-      this.setState({ newOrder: newList, total: total })
-    }
-    
-    placeOrder = () => {
-      if (this.state.total === 0) {
-          console.log("empty")
-      } else {
-        var currentDate = new Date();
-        var hour = currentDate.getHours();
-        var min = currentDate.getMinutes();
-        var date = currentDate.getDate();
-        var month = currentDate.getMonth(); 
-        var year = currentDate.getFullYear();
-        var monthDateYear  = hour + ":" + ('0' + min).slice(-2) + " " + (month+1) + "/" + date;
-        console.log(monthDateYear);
-        const orderarray = this.state.newOrder.map(e => e.menuItem)
-      console.log(this.state.total);
-      
-      axios.post('/api/Orders', {menuItems: orderarray, price: this.state.total, time: monthDateYear, isCompleted: false})
-        .then((result) => { 
-          console.log(result.data);
-          const sendOrder = result.data
-          
-          socket.emit('new-order', { sendOrder })
-          
-        })
-        
-        this.setState({ newOrder: [], total: 0 })
+      this.setState({ isLoggedIn: true, currentUser: this.state.username })
     }
   }
 
+  changeName = (event) => {
+    event.preventDefault();
+    this.setState({ username: event.target.value })
+  }
+
+  changePassword = (event) => {
+    event.preventDefault();
+    this.setState({ password: event.target.value })
+  }
+
+  getMenu = () => {
+    axios.get('/api/Menu')
+      .then((result) => {
+        this.setState({ menuList: result.data })
+      })
+  }
+
+  getOrders = () => {
+    axios.get('/api/Orders')
+      .then((result) => {
+        this.setState({ myOrders: result.data })
+      })
+  }
+
+  componentDidMount() {
+    this.getMenu();
+    this.getOrders();
+    socket.on('new-order', data => {
+      this.setState({ myOrders: [...this.state.myOrders, data.sendOrder] })
+    });
+    socket.on('complete-order', data => {
+      const orderUpdate = this.state.myOrders.find(item => item._id === data.data._id)
+      orderUpdate.isCompleted = data.data.isCompleted;
+      const index = data.data._id;
+      var newList = [...this.state.myOrders];
+      newList = (newList.filter(item => item._id !== index).map(item => item))
+      newList.push(orderUpdate)
+      this.setState({ myOrders: newList })
+    });
+  }
+
+  compileOrder = (id) => {
+    const additem = this.state.menuList.find(item => item._id === id)
+    const newList = [...this.state.newOrder];
+    newList.push(additem);
+    const newprice = (this.state.total + additem.price);
+    const total = parseFloat(newprice.toFixed(2));
+    this.setState({ newOrder: newList, total: total })
+  }
+
+  placeOrder = () => {
+    if (this.state.total === 0) {
+      console.log("empty")
+    } else {
+      var currentDate = new Date();
+      var hour = currentDate.getHours();
+      var min = currentDate.getMinutes();
+      var date = currentDate.getDate();
+      var month = currentDate.getMonth();
+      var monthDateYear = hour + ":" + ('0' + min).slice(-2) + " " + (month + 1) + "/" + date;
+      const orderarray = this.state.newOrder.map(e => e.menuItem)
+      axios.post('/api/Orders', { name: this.state.currentUser, menuItems: orderarray, price: this.state.total, time: monthDateYear, isCompleted: false })
+        .then((result) => {
+          const sendOrder = result.data
+          socket.emit('new-order', { sendOrder })
+        })
+      this.setState({ newOrder: [], total: 0 })
+    }
+  }
+
+  clearCart = () => {
+    this.setState({ newOrder: [], total: 0 })
+  }
+
   completeOrder = (id, isCompleted) => {
-    
     if (isCompleted === false) {
       axios.put(`/api/Orders/${id}`, { _id: id, isCompleted: true });
       const updateOrder = {
         _id: id,
         isCompleted: true,
       }
-    console.log(updateOrder);
-    socket.emit('complete-order', {data: updateOrder});
+      socket.emit('complete-order', { data: updateOrder });
       this.getOrders();
     } else {
       axios.put(`/api/Orders/${id}`, { _id: id, isCompleted: false });
       const updateOrder = {
         _id: id,
         isCompleted: false,
-      }   
-    console.log(updateOrder);
-    socket.emit('complete-order', {data: updateOrder});
+      }
+      socket.emit('complete-order', { data: updateOrder });
     }
-      this.getOrders();
-    }
+    this.getOrders();
+  }
 
-    
-
-
-
-    deleteOrder = (id) => {
-      console.log(id);
-      axios.delete(`/api/Orders/${id}`)
+  deleteOrder = (id) => {
+    axios.delete(`/api/Orders/${id}`)
       .then((result) => {
-        console.log(result);
         this.getOrders();
       })
-    }
+  }
 
-    renderHomepage = () => {
-      if(!this.state.isLoggedIn) {
-          return <Login 
-              handleLogin={this.submitLogin}
-              changeName={this.changeName}
-              changePassword={this.changePassword}  
-              username={this.state.username}
-              password={this.state.password}
-            />
-      }
-      else if(this.state.isLoggedIn && this.state.currentUser !== 'admin') {
-          return <HomePage
-          menuList={this.state.menuList} 
-          compileOrder={this.compileOrder}
-          newOrder={this.state.newOrder}    
-          total={this.state.total}       
-          placeOrder={this.placeOrder}
-          myOrders={this.state.myOrders}
-          deleteOrder={this.deleteOrder}
-          />
-      }
-      else if(this.state.isLoggedIn && this.state.currentUser === 'admin') {
-          return <AdminView 
-          myOrders={this.state.myOrders}
-          deleteOrder={this.deleteOrder}
-          time={this.state.time}
-          completeOrder={this.completeOrder}
-          />
-      }
+  renderHomepage = () => {
+    if (!this.state.isLoggedIn) {
+      return <Login
+        handleLogin={this.submitLogin}
+        changeName={this.changeName}
+        changePassword={this.changePassword}
+        username={this.state.username}
+        password={this.state.password}
+      />
     }
-    
-      render() {
-        return (
-          <div className="App">
-            <Header/>
-            {this.renderHomepage()}
-          </div>
-        );
-      }
+    else if (this.state.isLoggedIn && this.state.currentUser !== 'admin') {
+      return <HomePage
+        menuList={this.state.menuList}
+        compileOrder={this.compileOrder}
+        newOrder={this.state.newOrder}
+        total={this.state.total}
+        placeOrder={this.placeOrder}
+        myOrders={this.state.myOrders}
+        deleteOrder={this.deleteOrder}
+        clearCart={this.clearCart}
+      />
+    }
+    else if (this.state.isLoggedIn && this.state.currentUser === 'admin') {
+      return <AdminView
+        myOrders={this.state.myOrders}
+        deleteOrder={this.deleteOrder}
+        time={this.state.time}
+        completeOrder={this.completeOrder}
+      />
+    }
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <Header />
+        {this.renderHomepage()}
+      </div>
+    );
+  }
 
 }
 

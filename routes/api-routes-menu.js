@@ -17,12 +17,9 @@ module.exports = function (app) {
     Menu.create(req.body)
       .then(function (data) {
         res.json(data);
-        console.log(data);
       })
       .catch(function (err) {
         res.json(err);
       });
-  }); 
-
-  
+  });
 }
