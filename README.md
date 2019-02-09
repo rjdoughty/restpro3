@@ -3,7 +3,7 @@
 Doughboy's Burgers was created in React to demonstrate my ability to write a full stack web application.
 
 This application will allow a user to log in and choose items from the menu. 
-Currently the app is non secure and does not require a password. 
+Currently the app is non secure and does not require a password. It only requires a username.
 
 Once logged in, a user can select items from the menu.  When an item is selected it is added to the order cart and the total is calculated.  The order is submitted from the cart and will render to the My Orders section as well as the admin view using socket.io.
 
